@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>You Fell For It!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    html {
+        background: #000;
+        height: 100%;
+    }
+    
+    body {
+        font-family: 'Arial', sans-serif;
+        background: #000;
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+    
+    .image-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #000;
+        margin-bottom: 30px;
+    }
+    
+    .image-container img {
+        max-width: 90%;
+        max-height: 65vh;
+        object-fit: contain;
+        display: block;
+    }
+    
+    .text-overlay {
+        width: 100%;
+        background: #000;
+        color: white;
+        text-align: center;
+        padding: 25px 15px;
+        font-size: 1.3em;
+        line-height: 1.4;
+        position: absolute;
+        bottom: 0;
+    }
+    
+    .counter {
+        font-size: 2.2em;
+        font-weight: bold;
+        color: #ff6b6b;
+        margin: 5px 0;
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="image-container">
+        <img src="IMG_7801.jpeg" alt="Image">
+    </div>
+
+```
+<div class="text-overlay">
+    You're the <span class="counter" id="visitorCount">...</span> person who fell for it
+</div>
+
+<script>
+    // Using your CountAPI token for real global visitor tracking
+    const apiToken = 'ut_v4dnGF1ngNd4R0CQxupSojjHm1fQEVTYegIZ7Z8l';
+    
+    // Increment the counter
+    fetch(`https://api.countapi.xyz/update/${apiToken}/?amount=1`)
+        .then(response => response.json())
+        .then(data => {
+            const visitorCount = data.value;
+            
+            // Display the count with ordinal suffix (st, nd, rd, th)
+            function getOrdinalSuffix(num) {
+                const j = num % 10;
+                const k = num % 100;
+                if (j === 1 && k !== 11) {
+                    return num + "st";
+                }
+                if (j === 2 && k !== 12) {
+                    return num + "nd";
+                }
+                if (j === 3 && k !== 13) {
+                    return num + "rd";
+                }
+                return num + "th";
+            }
+            
+            document.getElementById('visitorCount').textContent = getOrdinalSuffix(visitorCount);
+        })
+        .catch(error => {
+            console.error('Error fetching visitor count:', error);
+            // Fallback to local counter if API fails
+            let localCount = localStorage.getItem('visitorCount') || 0;
+            localCount = parseInt(localCount) + 1;
+            localStorage.setItem('visitorCount', localCount);
+            
+            function getOrdinalSuffix(num) {
+                const j = num % 10;
+                const k = num % 100;
+                if (j === 1 && k !== 11) return num + "st";
+                if (j === 2 && k !== 12) return num + "nd";
+                if (j === 3 && k !== 13) return num + "rd";
+                return num + "th";
+            }
+            
+            document.getElementById('visitorCount').textContent = getOrdinalSuffix(localCount);
+        });
+</script>
+```
+
+</body>
+</html>
